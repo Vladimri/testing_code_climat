@@ -85,4 +85,4 @@ jobs:
         # KNAPSACK_PRO_RSPEC_SPLIT_BY_TEST_EXAMPLES: true
         run: |
           # run tests
-          bundle exec rspec .spec
+          bundle exec rspec
