@@ -8,10 +8,10 @@ RSpec.describe Company, type: :model do
   end
 
   it 'return 3' do
-    expect(subject.return_one).to eq(3)
+    expect(subject.return_one).to eq(1)
   end
 
   it 'return 5' do
-    expect(subject.return_one).to eq(5)
+    expect(subject.return_one).to eq(1)
   end
 end
