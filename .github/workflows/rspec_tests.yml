@@ -66,6 +66,7 @@ jobs:
       - name: Create DB
         run: |
           bin/rails db:migrate
+
       - name: Run tests
           #         env:
           #           KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC: ${{ secrets.KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC }}
@@ -87,19 +88,7 @@ jobs:
           # run tests
           bundle exec rspec
 
-  coverage:
-    needs: [ test ]
-    name: coverage
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-#      - uses: actions/setup-node@master
-#        with:
-#          node-version: '12'
-#      - run: npm install -g yarn
-#      - run: yarn install
-#      - run: yarn build
-      - uses: paambaati/codeclimate-action@v2.2.4
+      - name: Test coverage
+        uses: paambaati/codeclimate-action@v2.2.4
         env:
           CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
-
