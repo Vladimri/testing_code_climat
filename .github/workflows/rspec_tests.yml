@@ -89,6 +89,6 @@ jobs:
           bundle exec rspec
 
       - name: Test coverage
-        uses: paambaati/codeclimate-action@v2.2.4
+        uses: paambaati/codeclimate-action@v2.5.7
         env:
           CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
