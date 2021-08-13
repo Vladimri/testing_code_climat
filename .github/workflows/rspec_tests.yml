@@ -53,6 +53,12 @@ jobs:
       TZ: "Europe/Warsaw"
 
     steps:
+      - name: Install Code Climate reporter
+          run: |
+            export GIT_BRANCH="${GITHUB_REF/refs\/heads\//}"
+            sudo curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            sudo chmod +x ./cc-test-reporter
+
       - uses: actions/checkout@v2
 
       - name: Set up Ruby
@@ -88,10 +94,16 @@ jobs:
           # run tests
           bundle exec rspec
 
-      - name: Test & publish code coverage
-        uses: paambaati/codeclimate-action@v2.7.5
-        env:
-          CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
-        with:
-          coverageLocations: |
-            ${{github.workspace}}/coverage/*.json:simplecov
+      - name: Upload coverage information
+          env:
+            CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
+          run: |
+            sudo ./cc-test-reporter after-build -r $CC_TEST_REPORTER_ID
+
+#      - name: Test & publish code coverage
+#        uses: paambaati/codeclimate-action@v2.7.5
+#        env:
+#          CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
+#        with:
+#          coverageLocations: |
+#            ${{github.workspace}}/coverage/*.json:simplecov
