@@ -39,10 +39,10 @@ jobs:
         # [n] - where the n is a number of parallel jobs you want to run your tests on.
         # Use a higher number if you have slow tests to split them between more parallel jobs.
         # Remember to update the value of the `ci_node_index` below to (0..n-1).
-        ci_node_total: [2]
+        ci_node_total: [1]
         # Indexes for parallel jobs (starting from zero).
         # E.g. use [0, 1] for 2 parallel jobs, [0, 1, 2] for 3 parallel jobs, etc.
-        ci_node_index: [0, 1]
+        ci_node_index: [0]
 
     env:
       RAILS_ENV: test
@@ -53,6 +53,12 @@ jobs:
       TZ: "Europe/Warsaw"
 
     steps:
+      - name: Install Code Climate reporter
+          run: |
+            export GIT_BRANCH="${GITHUB_REF/refs\/heads\//}"
+            sudo curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+            sudo chmod +x ./cc-test-reporter
+
       - uses: actions/checkout@v2
 
       - name: Set up Ruby
@@ -66,6 +72,7 @@ jobs:
       - name: Create DB
         run: |
           bin/rails db:migrate
+
       - name: Run tests
           #         env:
           #           KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC: ${{ secrets.KNAPSACK_PRO_TEST_SUITE_TOKEN_RSPEC }}
@@ -86,3 +93,17 @@ jobs:
         run: |
           # run tests
           bundle exec rspec
+
+      - name: Upload coverage information
+          env:
+            CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
+          run: |
+            sudo ./cc-test-reporter after-build -r $CC_TEST_REPORTER_ID
+
+#      - name: Test & publish code coverage
+#        uses: paambaati/codeclimate-action@v2.7.5
+#        env:
+#          CC_TEST_REPORTER_ID: 423824aa53c234844e32834657a43dd622e4d617dfced8f5849f02bdbafa9c95
+#        with:
+#          coverageLocations: |
+#            ${{github.workspace}}/coverage/*.json:simplecov
